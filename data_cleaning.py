@@ -1,6 +1,11 @@
 #data_cleaning.py
 import pandas as pd
 
+def read_and_concat_dfs(file_paths: list) -> pd.DataFrame:
+    dfs = [pd.read_parquet(file_path) for file_path in file_paths]
+    df = pd.concat(dfs, ignore_index=True)
+    return df
+
 def basic_cleaning(df: pd.DataFrame) -> pd.DataFrame:
     df = df.copy()
 
@@ -25,7 +30,8 @@ def outlier_removal(df: pd.DataFrame) -> pd.DataFrame:
     for col in ["trip_distance", "total_amount"]:
         df = df[df[col] > 0] # Remove rows with non-positive values, because they are not representative of the population and they can introduce noise in the model
         
-        Q_range1 = df[[col]].quantile(0.25)
+        # Remove outliers using IQR method
+        Q_range1 = df[[col]].quantile(0.25) 
         Q_range2 = df[[col]].quantile(0.75)
         IQR = Q_range2 - Q_range1
         lower_bound = Q_range1  - 3 * IQR
