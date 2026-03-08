@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 
 *.parquet
+/code/
+*.C12948.zip
