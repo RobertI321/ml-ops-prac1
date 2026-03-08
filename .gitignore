@@ -5,4 +5,6 @@ __pycache__/
 
 *.parquet
 /code/
-*.C12948.zip
+*.zip
+/data
+/regression_model.pkl
