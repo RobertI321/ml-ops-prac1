@@ -1,4 +1,5 @@
 from data_cleaning import clean_data
+from data_cleaning import read_and_concat_dfs
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
@@ -6,8 +7,10 @@ import statsmodels.formula.api as smf
 from sklearn.metrics import root_mean_squared_error as RMSE
 
 import joblib
+import os
 
-df = pd.read_parquet("data/green_tripdata_2021-01.parquet")
+df = read_and_concat_dfs(["data/" + f for f in os.listdir("data/") if f.endswith(".parquet")])
+#df = pd.read_parquet("data/green_tripdata_2021-01.parquet")
 df_clean = clean_data(df)
 
 train_df, test_df = train_test_split(df_clean, test_size=0.2, random_state=42)
@@ -24,4 +27,4 @@ preds = model.predict(test[selected_featrues])
 
 print("Root mean squared error:", RMSE(test[predictable_feature], preds))
 
-#joblib.dump(model, "regression_model.pkl")
+joblib.dump(model, "regression_model.pkl")
